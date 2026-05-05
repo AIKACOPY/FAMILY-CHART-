@@ -994,6 +994,33 @@ async function getExportCanvas(scale, includeGirls){
   return result;
 }
 
+
+
+async function loadDefaultFromGitHub() {
+  try {
+    const res = await fetch("https://raw.githubusercontent.com/AIKACOPY/FAMILY-CHART-/main/family-tree.json");
+    
+    if (!res.ok) throw new Error("Failed to fetch JSON");
+
+    const data = await res.json();
+
+    // Assuming your app uses something like this:
+    treeData = data;
+
+    renderTree();        // your existing function
+    renderMemberList();  // your existing function
+    updateStats();       // your existing function
+
+    showToast("✅ Loaded default family tree from GitHub");
+
+  } catch (err) {
+    console.error(err);
+    showToast("⚠️ Failed to load default data");
+  }
+}
+
+
+
 /* ============================================================
    EXPORT — HIGH QUALITY PNG (entire tree, 3× scale)
 ============================================================ */
