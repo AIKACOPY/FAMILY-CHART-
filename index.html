@@ -141,7 +141,7 @@ html,body{height:100%;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Sego
     <button class="btn primary" onclick="openAddModal()">➕ Add Member</button>
     <button class="btn" onclick="openRelationModal()">🔗 Relationship</button>
     <button class="btn success" onclick="saveTree()">💾 Save</button>
-    <button class="btn" onclick="exportJSON()">📥 Export</button>
+    <button class="btn" onclick="saveFamilyJson()">📥 Export JSON</button>
     <button class="btn" onclick="document.getElementById('importFile').click()">📤 Import</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)"/>
     <button class="btn" onclick="openExportModal('pdf')">📄 PDF</button>
@@ -477,6 +477,7 @@ function pickCity(c){
    Use the "Save for GitHub" button to do this automatically.
 ============================================================ */
 const DEFAULT_DATA = /*FAMILY_DATA_START*/[]/*FAMILY_DATA_END*/;
+const DEFAULT_DATA_URL = 'family-data.json';
 
 /* ============================================================
    STATE & DATA
@@ -553,7 +554,8 @@ function renderFamilyDropdown(){
   ).join('');
 }
 
-function initFamilies(){
+async function initFamilies(){
+  await hydrateDefaultData();
   let families = getFamiliesList();
 
   // Migration: convert old single-family data to new multi-family format
@@ -581,6 +583,31 @@ function initFamilies(){
   currentFamilyId = activeId;
   state.members = loadFamilyMembers(currentFamilyId);
   renderFamilyDropdown();
+}
+
+async function hydrateDefaultData(){
+  try{
+    const response = await fetch(DEFAULT_DATA_URL, { cache: 'no-store' });
+    if(response.ok){
+      const data = await response.json();
+      if(Array.isArray(data) && data.length > 0){
+        DEFAULT_DATA.splice(0, DEFAULT_DATA.length, ...JSON.parse(JSON.stringify(data)));
+      }
+    }
+  }catch(err){}
+}
+
+async function loadRepoFamilyData(){
+  try{
+    const response = await fetch('family-data.json', { cache: 'no-store' });
+    if(!response.ok) return;
+    const data = await response.json();
+    if(!Array.isArray(data) || data.length === 0) return;
+    const families = [{id:fuid(), name:'My Family'}];
+    saveFamiliesList(families);
+    saveFamilyMembers(families[0].id, data);
+    localStorage.setItem(ACTIVE_FAMILY_KEY, families[0].id);
+  }catch(err){}
 }
 
 function switchFamily(familyId){
@@ -762,6 +789,16 @@ function saveForGitHub(){
   a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 10000);
   toast('📦 GitHub-ready file downloaded! Upload it to your repo.');
+}
+
+async function saveFamilyJson(){
+  const blob = new Blob([JSON.stringify(state.members, null, 2)], {type:'application/json;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'family-data.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 10000);
+  toast('📦 Downloaded family-data.json');
 }
 
 /* ============================================================
@@ -993,33 +1030,6 @@ async function getExportCanvas(scale, includeGirls){
   document.body.removeChild(container);
   return result;
 }
-
-
-
-async function loadDefaultFromGitHub() {
-  try {
-    const res = await fetch("https://raw.githubusercontent.com/AIKACOPY/FAMILY-CHART-/main/family-tree.json");
-    
-    if (!res.ok) throw new Error("Failed to fetch JSON");
-
-    const data = await res.json();
-
-    // Assuming your app uses something like this:
-    treeData = data;
-
-    renderTree();        // your existing function
-    renderMemberList();  // your existing function
-    updateStats();       // your existing function
-
-    showToast("✅ Loaded default family tree from GitHub");
-
-  } catch (err) {
-    console.error(err);
-    showToast("⚠️ Failed to load default data");
-  }
-}
-
-
 
 /* ============================================================
    EXPORT — HIGH QUALITY PNG (entire tree, 3× scale)
@@ -1606,18 +1616,19 @@ function computeRelation(aId,bId,ma,mb){
 
 function refreshAll(){ renderTree(); renderMemberList(); updateStats(); }
 function init(){
-  initFamilies();
-  history.push(JSON.stringify(state.members));
-  refreshAll();
-  $('imgPreview').src = defaultAvatar('?');
-  // Auto-save every 30 s
-  setInterval(function(){
-    if(currentFamilyId) saveFamilyMembers(currentFamilyId, state.members);
-  }, 30000);
-  // Enter key support for family modals
-  $('newFamilyName').addEventListener('keydown', e => { if(e.key==='Enter') confirmNewFamily(); });
-  $('renameFamilyName').addEventListener('keydown', e => { if(e.key==='Enter') confirmRenameFamily(); });
-  window.addEventListener('resize', function(){ renderTree(); });
+  loadRepoFamilyData().then(() => initFamilies()).then(() => {
+    history.push(JSON.stringify(state.members));
+    refreshAll();
+    $('imgPreview').src = defaultAvatar('?');
+    // Auto-save every 30 s
+    setInterval(function(){
+      if(currentFamilyId) saveFamilyMembers(currentFamilyId, state.members);
+    }, 30000);
+    // Enter key support for family modals
+    $('newFamilyName').addEventListener('keydown', e => { if(e.key==='Enter') confirmNewFamily(); });
+    $('renameFamilyName').addEventListener('keydown', e => { if(e.key==='Enter') confirmRenameFamily(); });
+    window.addEventListener('resize', function(){ renderTree(); });
+  });
 }
 init();
 </script>
