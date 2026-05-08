@@ -5,160 +5,146 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Genealogy Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://d3js.org/d3.v7.min.js" onerror="console.error('D3 failed to load')"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Outfit',sans-serif;background:#0a0f1a;color:#f1f5f9;height:100vh;overflow:hidden;width:100vw;display:flex;flex-direction:column}
-.bg-atmosphere{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 20% 20%,rgba(16,185,129,.08),transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(6,182,212,.06),transparent 50%),linear-gradient(180deg,#0a0f1a,#0d1424)}
-.bg-grid{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(148,163,184,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.03) 1px,transparent 1px);background-size:60px 60px}
-.glass{background:rgba(17,24,39,.85);backdrop-filter:blur(15px);border:1px solid rgba(255,255,255,.08);border-radius:12px}
-.app-container{display:flex;width:100%;height:100%;overflow:hidden;position:relative}
-.sidebar{width:300px;background:#111827;border-right:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;z-index:100;transition:transform .3s ease}
-.sidebar.hidden{transform:translateX(-100%);width:0!important;padding:0!important;overflow:hidden}
-.main-area{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
-.header{height:60px;background:rgba(17,24,39,.9);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0}
-.canvas-area{flex:1;position:relative;overflow:hidden;min-height:0}
-#tree-canvas{width:100%;height:100%;cursor:grab;display:block}
-#tree-canvas:active{cursor:grabbing}
-.controls{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:50;padding:8px;background:rgba(15,20,35,.95);border-radius:14px;border:1px solid rgba(255,255,255,.08)}
-.btn{padding:10px 18px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;outline:none;display:inline-flex;align-items:center;gap:6px;transition:all .15s ease;font-family:'Outfit',sans-serif}
+body{font-family:'Inter',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;height:100vh;overflow:hidden;width:100vw;display:flex;flex-direction:column}
+.bg-grid{position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(148,163,184,.03)1px,transparent),linear-gradient(90deg,rgba(148,163,184,.03)1px,transparent);background-size:40px 40px}
+.app-wrap{display:flex;width:100%;height:100%;overflow:hidden;position:relative}
+.sidebar{width:300px;background:#1e293b;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;z-index:50;transition:transform .3s ease}
+.sidebar.closed{transform:translateX(-100%);width:0!important;padding:0!important}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.header{height:56px;background:rgba(15,23,42,.95);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0}
+.canvas{flex:1;position:relative;overflow:hidden;min-height:0}
+#treeSVG{display:block;width:100%;height:100%;cursor:grab}
+#treeSVG:active{cursor:grabbing}
+.controls{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:40;padding:8px 12px;background:rgba(15,23,42,.92);border-radius:12px;border:1px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.ctrl-btn{width:38px;height:38px;border-radius:8px;border:none;background:rgba(148,163,154,.08);color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s}
+.ctrl-btn:hover{background:#10b981;color:white;transform:translateY(-2px)}
+.btn{padding:10px 18px;border-radius:8px;border:none;font-weight:600;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;font-family:'Inter',sans-serif}
 .btn:hover{transform:translateY(-1px)}
-.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:white}.btn-primary:hover{box-shadow:0 4px 20px rgba(16,185,129,.4)}
-.btn-secondary{background:rgba(148,163,184,.1);color:#94a3b8;border:1px solid rgba(148,163,184,.15)}.btn-secondary:hover{background:rgba(148,163,184,.18);color:#e2e8f0}
-.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:white}
-.btn-icon{width:40px;height:40px;padding:0;border-radius:10px}
-.form-input{background:rgba(30,41,59,.7);border:1px solid rgba(148,163,184,.2);color:#f1f5f9;padding:10px 14px;border-radius:8px;font-size:14px;width:100%}
-.form-input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 2px rgba(16,185,129,.2)}
-select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
-.member-item{display:flex;align-items:center;gap:10px;padding:10px;margin:4px 12px;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent}
-.member-item:hover{background:rgba(148,163,184,.08);border-color:rgba(148,163,184,.12)}
-.member-avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:white;flex-shrink:0}
-.stat-box{text-align:center;padding:12px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,127,.15);border-radius:10px}
+.btn-primary{background:linear-gradient(135deg,#10b981,#059669);color:white}.btn-secondary{background:rgba(148,163,154,.1);color:#94a3b8;border:1px solid rgba(148,163,154,.2)}.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:white}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:8px}
+.form-input{background:rgba(30,41,59,.6);border:1px solid rgba(71,85,105,.3);color:#e2e8f0;padding:10px 14px;border-radius:8px;font-size:14px;width:100%;font-family:'Inter',sans-serif}
+.form-input:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 2px rgba(16,185,129,.25)}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px;padding-right:28px}
+.member-card{fill:rgba(17,24,39,.85);stroke-width:1.5;rx:10;stroke:opacity:.5;cursor:pointer;transition:all .2s}
+.member-card:hover{stroke-opacity:1;filter:brightness(1.1)}
+.tree-link{fill:none;stroke:#475569;stroke-width:1.5;opacity:.35}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .2s, visibility .2s}
+.modal.show{opacity:1;visibility:visible}
+.modal-box{background:#1e293b;border-radius:16px;width:92%;max-width:520px;max-height:85vh;overflow-y:auto;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);transform:scale(.95);transition:transform .2s}
+.modal.show .modal-box{transform:scale(1)}
+.detail-panel{position:fixed;top:0;right:-400px;width:380px;height:100%;background:#1e293b;z-index:80;transition:right .3s;border-left:1px solid rgba(255,255,255,.05);overflow-y:auto}
+.detail-panel.open{right:0}
+.empty-msg{text-align:center;padding:60px 20px;color:#64748b;font-size:15px}
+.stat-item{text-align:center;padding:12px;background:rgba(16,185,127,.07);border:1px solid rgba(16,185,127,.15);border-radius:8px}
 .stat-num{font-size:22px;font-weight:700;color:#10b981}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:999;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .2s}
-.modal-overlay.show{opacity:1;visibility:visible}
-.modal-box{background:#1e293b;border-radius:16px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto;padding:20px;box-shadow:0 25px 60px rgba(0,0,0,.5);transform:scale(.95);transition:transform .2s}
-.modal-overlay.show .modal-box{transform:scale(1)}
-.detail-panel{position:fixed;top:0;right:-420px;width:380px;height:100%;background:#111827;z-index:90;transition:right .3s;border-left:1px solid rgba(255,255,255,.05);overflow-y:auto}
-.detail-panel.show{right:0}
-.color-btn{width:28px;height:28px;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:all .15s}
-.color-btn:hover{transform:scale(1.1)}
-.color-btn.selected{border-color:#fff;box-shadow:0 0 8px currentColor}
-.empty-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#94a3b8}
-.tooltip{position:absolute;background:#1e293b;border:1px solid rgba(148,163,184,.2);border-radius:8px;padding:10px;font-size:12px;pointer-events:none;z-index:200;opacity:0;transition:opacity .15s;max-width:220px;box-shadow:0 8px 25px rgba(0,0,0,.3)}
-
-/* Mobile */
-@media(max-width:768px){
-  .sidebar{position:fixed;left:0;top:0;height:100%;z-index:999;transform:translateX(-100%)}
-  .sidebar.show{transform:translateX(0)}
-  .detail-panel{width:100%;right:-100%}
-  .detail-panel.show{right:0}
-  .modal-box{width:95%;margin:16px}
-}
-
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-*:focus-visible{outline:2px solid #10b981;outline-offset:2px}
-</style>
+.stat-label{font-size:11px;color:#64748b;margin-top:4px}
+.member-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .15s}
+.member-row:hover{background:rgba(148,163,154,.04)}
+.avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;color:white;flex-shrink:0}
+.badge{padding:3px 8px;border-radius:12px;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.badge-alive{background:rgba(16,185,129,.15);color:#10b981}
+.badge-dead{background:rgba(239,68,68,.15);color:#ef4444}
+.tooltip{position:absolute;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px;font-size:12px;pointer-events:none;z-index:200;opacity:0;transition:opacity .15s,max-width:220px;box-shadow:0 8px 25px rgba(0,0,0,.3)}
+.tooltip.show{opacity:1}@media(max-width:768px){.sidebar{position:fixed;left:0;top:0;height:100%;transform:translateX(-100%);z-index:999;transition:transform .3s}.sidebar.open{transform:translateX(0)}.detail-panel{position:fixed;left:0;right:0;width:100%!important}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}.4s ease forwards}*{animation-duration:.01ms!important;transition-duration:.01ms!important}</style>
 </head>
 <body>
+<div class="bg-grid"></div>
 
-<div class="bg-atmosphere"></div><div class="bg-grid"></div>
-
-<div class="app-container" id="app">
+<div class="app-wrap" id="app">
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
-  <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.05)">
-    <h1 style="font-size:18px;font-weight:700"><span style="color:#10b981">Genealogy</span> <span style="color:#64748b">Pro</span></h1>
+  <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.06)">
+    <h1 style="font-size:18px;font-weight:700"><span style="color:#10b981">Genealogy</span><span style="color:#64748b">Pro</span></h1>
     <select id="familySelect" class="form-input" style="margin-top:12px" onchange="switchFamily(this.value)"><option>Loading...</option></select>
   </div>
   
-  <div style="padding:12px 16px;display:flex;gap:8px;border-bottom:1px solid rgba(255,255,255,.05)">
+  <div style="padding:12px 16px;display:flex;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)">
     <button class="btn btn-secondary flex-1 text-xs py-2" onclick="createNewFamily()">New</button>
     <button class="btn btn-danger flex-1 text-xs py-2" onclick="deleteFamily()">Delete</button>
   </div>
   
-  <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.05)">
+  <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.06)">
     <input type="text" class="form-input" placeholder="Search members..." id="searchInput" oninput="filterMembers()">
   </div>
   
-  <div style="padding:12px 16px;">
-    <div class="stat-box"><div class="stat-num" id="totalStat">0</div><div style="font-size:11px;color:#64748b;margin-top:4px">Total Members</div></div>
-    <div class="stat-box" style="margin-top:8px"><div class="stat-num" id="aliveStat">0</div><div style="font-size:11px;color:#64748b;margin-top:4px">Living</div></div>
+  <div style="padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="stat-item"><div class="stat-num" id="totalStat">0</div><div class="stat-label">Members</div></div>
+    <div class="stat-item"><div class="stat-num" id="aliveStat">0</div><div class="stat-label">Living</div></div>
   </div>
   
-  <div style="padding:12px 16px;flex:1;overflow-y:auto;min-height:0" id="memberList">
-    <p style="color:#64748b;font-size:12px;text-align:center;padding:20px 0" id="emptyMsg">No members. Click Add Member below.</p>
-  </div>
+  <div style="padding:12px 16px;flex:1;overflow-y:auto;min-height:0" id="memberList"></div>
   
-  <div style="padding:16px;border-top:1px solid rgba(255,255,255,.05)">
-    <button class="btn btn-primary w-full" id="addMemberBtn" onclick="openAddModal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>Add Member
+  <div style="padding:16px;border-top:1px solid rgba(255,255,255,.06)">
+    <button class="btn btn-primary w-full" id="addBtn" onclick="showAddModal()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>Add Member
     </button>
   </div>
 </aside>
 
-<!-- MAIN AREA -->
-<main class="main-area">
+<!-- MAIN -->
+<main class="main">
   <header class="header">
     <div style="display:flex;align-items:center;gap:12px">
-      <button class="btn-icon" id="menuBtn" onclick="toggleSidebar()" aria-label="Menu">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      <button class="ctrl-btn" id="menuBtn" onclick="toggleSidebar()" aria-label="Menu">
+        <svg width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18v-6"/></svg>
       </button>
-      <span style="font-size:14px;color:#94a3b8" id="breadcrumb">Main Tree</span>
+      <span style="font-size:13px;color:#94a3b8" id="crumb">Main Tree</span>
     </div>
     <button class="btn btn-primary text-xs py-2" onclick="saveData()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>Save
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21l-6-6m11.02 0V13M7 3v8m0 8h10"/></svg>Save
     </button>
   </header>
   
-  <div class="canvas-area" id="canvasArea">
-    <svg id="treeCanvas"></svg>
-    <div class="empty-state" id="emptyState" style="display:none">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1" opacity=".3" style="margin-bottom:16px"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+  <div class="canvas" id="canvasArea">
+    <svg id="treeSVG"></svg>
+    <div class="empty-msg" id="emptyMsg">
+      <svg width="64" height="64" fill="none" stroke="#10b981" stroke-width="1" opacity=".3" viewBox="0 0 24 24" style="margin-bottom:16px"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
       <h2 style="font-size:20px;color:#f1f5f9;margin-bottom:8px">Start Your Family Tree</h2>
-      <p style="color:#64748b;font-size:14px;margin-bottom:20px">Add your first member to begin.</p>
-      <button class="btn btn-primary" onclick="openAddModal()" style="padding:14px 32px;font-size:15px">Add First Member</button>
+      <p style="color:#64748b;margin-bottom:20px;font-size:14px">Add your first member to begin.</p>
+      <button class="btn btn-primary" onclick="showAddModal()" style="padding:14px 32px;font-size:15px">Add First Member</button>
     </div>
-    <div class="tooltip" id="tooltip"></div>
     
     <div class="controls">
-      <button class="btn-icon" onclick="zoomIn()" title="Zoom In"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg></button>
-      <button class="btn-icon" onclick="zoomOut()" title="Zoom Out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M8 11h6"/></svg></button>
-      <button class="btn-icon" onclick="resetView()" title="Reset"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
-      <button class="btn-icon" onclick="goHome()" title="Home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></button>
+      <button class="ctrl-btn" onclick="zoomIn()" title="Zoom In"><svg width="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg></button>
+      <button class="ctrl-btn" onclick="zoomOut()" title="Zoom Out"><svg width="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M8 11h6"/></svg></button>
+      <button class="ctrl-btn" onclick="resetView()" title="Reset View"><svg width="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="ctrl-btn" onclick="goHome()" title="Home"><svg width="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></button>
     </div>
   </div>
 </main>
 
 <!-- DETAIL PANEL -->
 <aside class="detail-panel" id="detailPanel">
-  <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:between">
+  <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
     <h3 style="font-size:16px;font-weight:600">Member Details</h3>
-    <button class="btn-icon" onclick="closeDetail()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <button class="ctrl-btn" onclick="closeDetail()" aria-label="Close details">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
   </div>
   <div id="detailContent" style="padding:16px;overflow-y:auto;"></div>
-  <div style="padding:16px;border-top:1px solid rgba(255,255,255,.05);display:flex;gap:8px">
+  <div style="padding:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px">
     <button class="btn btn-secondary flex-1 text-sm" onclick="editCurrent()">Edit</button>
     <button class="btn btn-danger flex-1 text-sm" onclick="deleteCurrent()">Delete</button>
   </div>
 </aside>
 
-</div>
-
 <!-- ADD/EDIT MODAL -->
-<div class="modal-overlay" id="addModal">
+<div class="modal" id="addModal">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)">
       <h2 style="font-size:18px;font-weight:600" id="modalTitle">Add Family Member</h2>
-      <button class="btn-icon" onclick="closeAddModal()" style="background:rgba(255,255,255,.05)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="ctrl-btn" onclick="closeAddModal()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     
     <form id="memberForm" onsubmit="saveMember(event)">
       <input type="hidden" id="editId">
       
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div style="grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
         <div>
           <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:4px;font-weight:500">Full Name *</label>
           <input type="text" id="mName" class="form-input" placeholder="Enter name" required>
@@ -169,7 +155,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
         </div>
       </div>
       
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div style="grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
         <div>
           <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:4px;font-weight:500">Birth Date *</label>
           <input type="date" id="mDOB" class="form-input" required>
@@ -197,7 +183,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
       
       <div style="margin-bottom:12px">
         <label style="display:block;font-size:12px;color:#94a3b8;margin-bottom:8px;font-weight:500">Card Color</label>
-        <div style="display:flex;flex-wrap:wrap;gap:6px" id="colorPalette"></div>
+        <div id="colorPalette" style="display:flex;flex-wrap:wrap;gap:6px"></div>
         <input type="hidden" id="mColor" value="#10b981">
       </div>
       
@@ -206,7 +192,7 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
         <textarea id="mNotes" class="form-input" rows="2" placeholder="Optional notes..."></textarea>
       </div>
       
-      <div style="display:flex;gap:10px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)">
+      <div style="display:flex;gap:10px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)">
         <button type="button" class="btn btn-secondary flex-1" onclick="closeAddModal()">Cancel</button>
         <button type="submit" class="btn btn-primary flex-1">Save Member</button>
       </div>
@@ -215,24 +201,24 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 </div>
 
 <!-- CONFIRM MODAL -->
-<div class="modal-overlay" id="confirmModal">
+<div class="modal" id="confirmModal">
   <div class="modal-box" style="max-width:350px;text-align:center;padding:24px">
     <div style="width:48px;height:48px;border-radius:50%;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
+      <svg width="24" height="24" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></svg>
     </div>
     <h3 style="font-size:18px;font-weight:600;margin-bottom:8px" id="confirmTitle">Confirm</h3>
-    <p style="color:#94a3b8;margin-bottom:20px;font-size:14px" id="confirmMsg">Are you sure?</p>
+    <p style="color:#94a3b8;margin-bottom:16px;font-size:14px" id="confirmMsg">Are you sure?</p>
     <div style="display:flex;gap:10px">
       <button class="btn btn-secondary flex-1" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-danger flex-1" id="confirmOk">Delete</button>
+      <button class="btn btn-danger flex-1" id="confirmOkBtn">Delete</button>
     </div>
   </div>
 </div>
 
 <script>
-// =============================================
-// STATE
-// =============================================
+// ============================================
+// STATE & DATA
+// ============================================
 let state = {
   families: {},
   currentFamily: null,
@@ -247,15 +233,20 @@ const COLORS = ['#ef4444','#f97316','#f59e0b','#84cc16','#22c55e','#10b981','#14
 let svg, g, zoom;
 
 // =============================================
-// INIT
-// =============================================
+// INITIALIZATION
+// ============================================
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 Genealogy Pro initializing...');
+  console.log('🚀 Initializing Genealogy Pro...');
   
-  // Check D3 loaded
+  // Check if D3 loaded
   if (typeof d3 === 'undefined') {
-    console.error('❌ D3.js not loaded! Check internet connection.');
-    alert('Error: Required library not loaded.\nPlease check internet connection and refresh.');
+    console.error('❌ D3.js not found!');
+    document.getElementById('emptyMsg').innerHTML = `
+      <div style="text-align:center;padding:40px 20px;">
+        <h2 style="color:#ef4444;font-size:20px;">⚠️ Error Loading Failed</h2>
+        <p style="color:#94a3b8;font-size:14px;margin-top:8px;">Required library could not load.</p>
+        <p style="color:#64748b;font-size:12px;margin-top:8px;">Check internet connection and refresh.</p>
+      </div>`;
     return;
   }
   
@@ -269,10 +260,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadData() {
   try {
-    const saved = localStorage.getItem('genealogy_data_v4');
+    const saved = localStorage.getItem('genealogy_pro_data');
     if (saved) {
       state = JSON.parse(saved);
-      console.log('📦 Loaded saved data:', state.members?.length || 0, 'members');
+      console.log('📦 Loaded data:', state.members?.length || 0, 'members');
     } else {
       createDefaultFamily();
     }
@@ -282,9 +273,15 @@ function loadData() {
   }
 }
 
+function createDefaultFamily() {
+  state.families['default'] = { id: 'default', name: 'My Family', created: new Date().toISOString(), members: [] };
+  state.currentFamily = 'default';
+  state.members = [];
+}
+
 function saveData() {
   try {
-    localStorage.setItem('genealogy_data_v4', JSON.stringify(state));
+    localStorage.setItem('genealogy_pro_data', JSON.stringify(state));
     showNotification('💾 Data saved!', 'success');
     pushHistory();
   } catch(e) {
@@ -293,27 +290,23 @@ function saveData() {
   }
 }
 
-function createDefaultFamily() {
-  state.families['default'] = { id: 'default', name: 'My Family', created: new Date().toISOString(), members: [] };
-  state.currentFamily = 'default';
-  state.members = [];
-}
-
 // =============================================
-// UI INITIALIZATION
+// UI FUNCTIONS
 // =============================================
 function initUI() {
   updateFamilySelect();
   updateMemberList();
+  initColorPalette();
   updateStats();
 }
 
 function initTree() {
   const container = document.getElementById('canvasArea');
-  svg = d3.select('#treeCanvas')
+  
+  svg = d3.select('#treeSVG')
     .attr('width', container.clientWidth)
-    .attr('height', container.clientHeight)
-    .style('display', 'block');
+    .attr('height',container.clientHeight)
+    .style('display','block');
 
   g = svg.append('g');
 
@@ -340,16 +333,11 @@ function bindEvents() {
   const menuBtn = document.getElementById('menuBtn');
   if (menuBtn) {
     menuBtn.addEventListener('click', function() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
-      this.innerHTML = sidebar.classList.contains('hidden') 
-        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M8 12h12M8 18l6-6"/></svg>'
-        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+      toggleSidebar();
     });
-  });
   }
 
-  // Window resize
+  // Window resize with debounce
   let resizeTimer;
   window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
@@ -368,18 +356,12 @@ function bindEvents() {
       closeAllModals();
       closeDetail();
     }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-      e.preventDefault();
-      undoAction();
-    }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
-      e.preventDefault();
-      redoAction();
-    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undoAction(); }
+    if ((e.classList && e.key === 'Enter') { e.preventDefault(); }
   });
 
   // Close modals on overlay click
-  document.querySelectorAll('.modal-overlay').forEach(modal => {
+  document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', function(e) {
       if (e.target === modal) {
         modal.classList.remove('show');
@@ -395,6 +377,7 @@ function bindEvents() {
 function updateFamilySelect() {
   const sel = document.getElementById('familySelect');
   sel.innerHTML = '<option value="">Select family...</option>';
+  
   Object.keys(state.families).forEach(id => {
     const f = state.families[id];
     const opt = document.createElement('option');
@@ -423,7 +406,7 @@ function createNewFamily() {
   const id = 'f_' + Date.now();
   state.families[id] = { id, name, created: new Date().toISOString(), members: [] };
   switchFamily(id);
-  showNotification(`Family "${name}" created!`, 'success');
+  showNotification(`"${name}" created!`, 'success');
 }
 
 function deleteFamily() {
@@ -446,7 +429,7 @@ function deleteFamily() {
 // =============================================
 // MEMBER CRUD
 // =============================================
-function openAddModal(parentId) {
+function showAddModal(parentId) {
   resetForm();
   document.getElementById('modalTitle').textContent = 'Add Family Member';
   populateParents();
@@ -459,7 +442,6 @@ function openAddModal(parentId) {
   document.getElementById('addModal').classList.add('show');
   document.body.style.overflow = 'hidden';
   
-  // Focus first input after animation
   setTimeout(() => {
     document.getElementById('mName').focus();
   }, 200);
@@ -470,8 +452,8 @@ function closeAddModal() {
   document.body.style.overflow = '';
 }
 
-function saveMember(e) {
-  e.preventDefault();
+function saveMember(event) {
+  event.preventDefault();
   
   const id = document.getElementById('editId').value || ('m_' + Date.now());
   
@@ -479,7 +461,7 @@ function saveMember(e) {
     id: id,
     name: document.getElementById('mName').value.trim(),
     dob: document.getElementById('mDOB').value,
-    deathDate: document.getElementById('mDeathDate').value || null,
+    deathDate: document.getElementById('mDeath').value || null,
     gender: document.getElementById('mGender').value,
     parent: document.getElementById('mParent').value || null,
     spouse: document.getElementById('mSpouse').value.trim() || null,
@@ -493,10 +475,10 @@ function saveMember(e) {
     return;
   }
 
-  // Edit existing or add new
+  // Edit or add
   const idx = state.members.findIndex(m => m.id === id);
   if (idx >= 0) {
-    state.members[idx] = { ...state.members[idx], ...member };
+    state.members[idx] = {...state.members[idx], ...member};
     showNotification(`${member.name} updated`, 'success');
   } else {
     state.members.push(member);
@@ -519,7 +501,7 @@ function editCurrent() {
   document.getElementById('editId').value = m.id;
   document.getElementById('mName').value = m.name;
   document.getElementById('mDOB').value = m.dob;
-  document.getElementById('mDeath').value = m.deathDate || '';
+  document.getElementById('mDeath').value = m.death || '';
   document.getElementById('mGender').value = m.gender;
   document.getElementById('mParent').value = m.parent || '';
   document.getElementById('mSpouse').value = m.spouse || '';
@@ -528,7 +510,7 @@ function editCurrent() {
   document.getElementById('mNotes').value = m.notes || '';
   
   selectColor(m.color || COLORS[0]);
-  populateParents(m.id);
+  populateMembers(m.id);
   
   document.getElementById('addModal').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -543,7 +525,6 @@ function deleteCurrent() {
     'Delete Member',
     `Remove "${m.name}" from family tree?`,
     () => {
-      // Remove member and orphan children
       state.members = state.members.filter(x => x.id !== state.selectedId);
       state.members.forEach(child => {
         if (child.parent === state.selectedId) child.parent = null;
@@ -559,7 +540,7 @@ function deleteCurrent() {
   );
 }
 
-function populateParents(excludeId) {
+function populateMembers(excludeId) {
   const sel = document.getElementById('mParent');
   sel.innerHTML = '<option value="">None (Root)</option>';
   
@@ -586,22 +567,19 @@ function renderTree() {
   if (!g || !svg) return;
   
   const members = getFilteredMembers();
-  
-  // Show/hide empty state
-  const emptyEl = document.getElementById('emptyState');
-  const listEmpty = document.getElementById('emptyMsg');
+  const emptyEl = document.getElementById('emptyMsg');
+  const listEl = document.getElementById('memberList');
   
   if (members.length === 0) {
     g.selectAll('*').remove();
-    if (emptyEl) emptyEl.style.display = 'flex';
-    if (listEmpty) listEmpty.style.display = 'block';
+    emptyEl.style.display = 'block';
+    listEl.innerHTML = '';
     return;
   }
   
-  if (emptyEl) emptyEl.style.display = 'none';
-  if (listEmpty) listEmpty.style.display = 'none';
+  emptyEl.style.display = 'none';
+  listEl.innerHTML = '';
 
-  // Build hierarchy
   const rootId = state.viewRoot || findRoot(members);
   const hierarchy = buildHierarchy(members, rootId);
   
@@ -652,7 +630,7 @@ function renderTree() {
    })
    .on('mouseleave', hideTooltip);
 
-  // Card background
+  // Card
   nodes.append('rect')
     .attr('x', -65)
     .attr('y', -32)
@@ -670,7 +648,7 @@ function renderTree() {
     .attr('cy', -14)
     .attr('fill', d => d.data.color || '#10b981');
 
-  // Initial letter
+  // Initial
   nodes.append('text')
     .attr('y', -18)
     .attr('text-anchor', 'middle')
@@ -693,8 +671,8 @@ function renderTree() {
     .attr('y', 32)
     .attr('text-anchor', 'middle')
     .attr('fill', '#94a3b8')
-    .attr('font-size': 9px)
-    .text(d => formatYears(d.data.dob, d.data.deathDate));
+    .attr('font-size', 9px')
+    .text(d => formatYears(d.data.dob, d.data.death));
 
   // Generation badge
   nodes.append('circle')
@@ -704,6 +682,7 @@ function renderTree() {
     .attr('fill', d => d.data.color || '#10b981')
     .attr('opacity', 0.8);
 
+  // Generation number
   nodes.append('text')
     .attr('x', -55)
     .attr('y', -21)
@@ -724,13 +703,13 @@ function renderTree() {
       .text(d => d.data.gender === 'male' ? '\u2642' : '\u2640');
   }
 
-  // Spouse indicator
+  // Spouse
   if (d.data.spouse) {
     nodes.append('text')
       .attr('y', 44)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#64748b')
-      .attr('font-size': 8)
+      .attr('fill', '#64748b8')
+      .attr('font-size', 8)
       .text('\u2615 ' + truncate(d.data.spouse, 8));
   }
 
@@ -748,14 +727,14 @@ function renderTree() {
   // Animate in
   nodes.transition()
     .delay((d, i) => i * 40)
-    .duration(300)
+    .duration(250)
     .ease(d3.easeCubicOut)
     .style('opacity', 1);
 }
 
 function buildHierarchy(members, rootId) {
   const map = {};
-  members.forEach(m => map[m.id] = { ...m, children: [] });
+  members.forEach(m => map[m.id] = {...m, children: []});
   let root = null;
   
   members.forEach(m => {
@@ -816,83 +795,87 @@ function showDetail(member) {
   const parent = member.parent ? state.members.find(x => x.id === member.parent) : null;
   
   content.innerHTML = `
-    <div style="text-align:center;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.05)">
-      <div style="width:72px;height:72px;margin:0 auto;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:white;background:${member.color || '#10b981'}">${(member.name||'?')[0]}</div>
+    <div style="text-align:center;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div style="width:72px;height:72px;margin:0 auto;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:white;background:${member.color || '#10b981'}">${(member.name||'?')[0]}</div>
       <h3 style="font-size:18px;font-weight:600;margin-top:12px">${member.name}</h3>
       <div style="display:flex;justify-content:center;gap:8px;margin-top:6px;font-size:13px;color:#94a3b8">
-        <span>${member.gender === 'male'?'\u2642 Male':member.gender === 'female'?\u2640 Female':'Other'}</span>
+        <span>${member.gender === 'male' ? '\u2642 Male' : member.gender === 'female' ? '\u2640 Female' : 'Other'}</span>
         <span>\u00B7</span>
         <span>${age}</span>
       </div>
-      <div style="display:flex;justify-content:center;gap:6px;margin-top:8px;flex-wrap:wrap">
-        ${member.deathDate?'<span class="badge" style="background:rgba(239,68,68,.15);color:#ef4444;padding:3px 8px;border-radius:12px;font-size:10px">Deceased</span>':'<span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;padding:3px 8px;border-radius:12px;font-size:10px">Living</span>'}
-        <span class="badge" style="background:${hexToRgba(member.color||'#10b981',0.15)};color:${member.color};padding:3px 8px;border-radius:12px;font-size:10px">Gen ${getGeneration(member.id)}</span>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:8px;flex-wrap:wrap;">
+        ${member.deathDate ? '<span class="badge" style="background:rgba(239,68,68,.15);color:#ef4444;padding:3px 8px;border-radius:10px;font-size:10px">Deceased</span>' : '<span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;padding:3px 8px;border-radius:10px;font-size:10px">Living</span>'}
+        <span class="badge" style="background:${hexToRgba(member.color||'#10b981',0.15)};color:${member.color};padding:3px 8px;border-radius:10px;font-size:10px">Gen ${getGeneration(member.id)}</span>
       </div>
     </div>
     
     <div style="margin-top:16px;display:grid;gap:12px;">
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Born</div>
+        <div style="font-size:10px;color:#64748b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Born</div>
         <div style="font-size:14px;font-weight:500">${formatDate(member.dob)||'-'}</div>
       </div>
-      ${member.deathDate?`
+      ${member.deathDate ? `
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Died</div>
+        <div style="font-size:10px;color:#64748b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Died</div>
         <div style="font-size:14px;font-weight:500">${formatDate(member.deathDate)}</div>
-      </div>`:''}
+      </div>` : ''}
+      
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Age</div>
+        <div style="font-size:10px;color:#647b8b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Age</div>
         <div style="font-size:14px;font-weight:500">${age}</div>
       </div>
-      ${member.location?`
+      
+      ${member.location ? `
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Location</div>
+        <div style="font-size:10px;color:#647b7b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Location</div>
         <div style="font-size:14px;font-weight:500">${member.location}</div>
-      </div>`:''}
-      ${member.spouse?`
+      </div>` : ''}
+      
+      ${member.spouse ? `
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Spouse</div>
+        <div style="font-size:10px;color:#647b7b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Spouse</div>
         <div style="font-size:14px;font-weight:500">${member.spouse}</div>
-      </div>`:''}
-      ${parent?`
+      </div>` : ''}
+      
+      ${parent ? `
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Parent</div>
-        <div style="font-size:14px;font-weight:500;cursor:pointer;color:#10b981" onclick="selectMember('${parent.id}')">${parent.name}</div>
-      </div>`:''}
+        <div style="font-size:10px;color:#647b7b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Parent</div>
+        <div style="font-size:14px;font-weight:500;color:#10b981;cursor:pointer;" onclick="selectMember('${parent.id}')">${parent.name}</div>
+      </div>` : ''}
+      
       ${children.length > 0 ? `
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Children (${children.length})</div>
-        ${children.map(c => `<div style="display:flex;align-items:center;gap:8px;padding:6px;border-radius:6px;background:rgba(148,163,154,.04);cursor:pointer;margin-top:4px" onclick="selectMember('${c.id}')"><div style="width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;background:${c.color || '#10b981'}">${(c.name||'?')[0]}</div><div style="font-size:13px;">${c.name}</div></div>`).join('')}
-      </div>`:''}
-      ${member.notes?`
+        <div style="font-size:10px;color:#647b7b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:600">Children (${children.length})</div>
+        ${children.map(c => `
+          <div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;background:rgba(148,163,154,.04);cursor:pointer;margin-top:4px" onclick="selectMember('${c.id}')">
+            <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:white;background:${c.color || '#10b981'}">${(c.name||'?')[0]}</div>
+            <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.name}</div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+      
+      ${member.notes ? `
       <div class="glass" style="padding:12px;border-radius:10px">
-        <div style="font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Notes</div>
-        <div style="font-size:13px;color:#cbd5e1;line-height:1.4">${member.notes}</div>
-      </div>`:''}
-    </div>
-    
-    <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-      <button class="btn btn-secondary text-sm" onclick="editCurrent()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 012-2v14a2 2 0 002 2h14a2 2 0 002-2v-3M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4-4M11 8v6M8 11h6"/></svg>Edit
-      </button>
-      ${member.gender === 'female' && children.length > 0 ? 
-      `<button class="btn btn-secondary text-sm" onclick="viewSubtree('${member.id}')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>View Full Tree
-      </button>`:''}
-      <button class="btn btn-secondary text-sm" onclick="focusOnMember('${member.id}')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Locate
-      </button>
-      <button class="btn btn-primary text-sm" onclick="addChildTo('${member.id}')">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>Add Child
-      </button>
+        <div style="font-size:10px;color:#647b7b8;text-transform:overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.4;max-height:60px;overflow-y:auto;">
+          <div style="font-size:10px;color:#647b7b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:600">Notes</div>
+          <div style="font-size:13px;color:#cbd5e1;line-height:1.4;white-space:pre-wrap;">${member.notes}</div>
+        </div>
+      ` : ''}
+      
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-secondary text-sm" onclick="editCurrent()">Edit</button>
+        ${member.gender === 'female' && children.length > 0 ? `<button class="btn btn-secondary text-sm" onclick="viewSubtree('${member.id}')">View Full Tree</button>` : ''}
+        <button class="btn btn-secondary text-sm" onclick="focusOnMember('${member.id}')">Locate</button>
+        <button class="btn btn-primary text-sm" onclick="addChildTo('${member.id}')">Add Child</button>
+      </div>
     </div>
   `;
   
-  panel.classList.add('show');
+  panel.classList.add('open');
 }
 
 function closeDetail() {
-  document.getElementById('detailPanel').classList.remove('show');
+  document.getElementById('detailPanel').classList.remove('open');
   state.selectedId = null;
   updateMemberList();
 }
@@ -901,11 +884,11 @@ function highlightNode(id) {
   document.querySelectorAll('.node').forEach(el => {
     const data = el.__data__;
     if (data && data.id === id) {
-      el.querySelector('rect').setAttribute('stroke-width', '2.5');
-      el.querySelector('rect').setAttribute('stroke-opacity', '1');
+      el.querySelector('.member-card').setAttribute('stroke-width', '2.5');
+      el.querySelector('.member-card').setAttribute('stroke-opacity', '1');
     } else {
-      el.querySelector('rect').setAttribute('stroke-width', '1');
-      el.querySelector('rect').setAttribute('stroke-opacity', '0.5');
+      el.querySelector('.member-card').setAttribute('stroke-width', '1');
+      el.querySelector('.member-card').setAttribute('focusable', 'false');
     }
   });
 }
@@ -925,20 +908,20 @@ function focusOnMember(id) {
 
 function viewSubtree(id) {
   state.viewRoot = id;
-  document.getElementById('breadcrumb').textContent = state.members.find(x => x.id === id)?.name + "'s Family" || 'Subtree';
+  document.getElementById('crumb').textContent = state.members.find(x => x.id === id)?.name + "'s Family" || 'Subtree';
   renderTree();
   setTimeout(resetView, 100);
 }
 
 function goHome() {
   state.viewRoot = null;
-  document.getElementById('breadcrumb').textContent = 'Main Tree';
+  document.getElementById('crumb').textContent = 'Main Tree';
   renderTree();
   setTimeout(resetView, 100);
 }
 
 function addChildTo(parentId) {
-  openAddModal(parentId);
+  showAddModal(parentId);
 }
 
 function getGeneration(id) {
@@ -953,90 +936,11 @@ function getGeneration(id) {
 }
 
 // =============================================
-// MEMBER LIST
-// =============================================
-function updateMemberList() {
-  const container = document.getElementById('memberList');
-  const emptyMsg = document.getElementById('emptyMsg');
-  
-  if (state.members.length === 0) {
-    container.innerHTML = '';
-    if (emptyMsg) emptyMsg.style.display = 'block';
-    return;
-  }
-  
-  if (emptyMsg) emptyMsg.style.display = 'none';
-  
-  container.innerHTML = state.members
-    .sort((a,b) => a.name.localeCompare(b.name))
-    .map(m => `
-      <div class="member-item ${state.selectedId === m.id ? 'background:rgba(16,185,129,.08);border-color:rgba(16,185,127,.2)' : ''}" onclick="selectMember('${m.id}')">
-        <div class="member-avatar" style="background:${m.color || '#10b981'}">${(m.name||'?')[0]}</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name}</div>
-          <div style="font-size:11px;color:#64748b">${formatYears(m.dob,m.deathDate)}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end;">
-          ${m.deathDate?'<span style="font-size:9px;padding:2px 6px;border-radius:8px;background:rgba(239,68,68,.15);color:#ef4444">Deceased</span>':'<span style="font-size:9px;padding:2px 6px;border-radius:8px;background:rgba(16,185,129,.15);color:#10b981">Living</span>'}
-        </div>
-      </div>
-    `).join('');
-}
-
-function updateStats() {
-  document.getElementById('totalStat').textContent = state.members.length;
-  document.getElementById('aliveStat').textContent = state.members.filter(m => !m.deathDate).length;
-}
-
-// =============================================
 // FILTERS
 // =============================================
 function filterMembers() {
   renderTree();
   updateMemberList();
-}
-
-// =============================================
-// ZOOM CONTROLS
-// =============================================
-function zoomIn() {
-  svg.transition().duration(250).call(zoom.scaleBy, 1.4);
-}
-
-function zoomOut() {
-  svg.transition().duration(250).call(zoom.scaleBy, 0.7);
-}
-
-function resetView() {
-  const container = document.getElementById('canvasArea');
-  svg.transition().duration(400).call(
-    zoom.transform,
-    d3.zoomIdentity.translate(container.clientWidth / 2, container.clientHeight / 3).scale(1)
-  );
-}
-
-function fitToScreen() {
-  const container = document.getElementById('canvasArea');
-  const members = getFilteredMembers();
-  if(!members.length){resetView();return;}
-  
-  let minX=Infinity,maxX=-Infinity,minY=-Infinity,maxY=-Infinity;
-  document.querySelectorAll('.node').forEach(el=>{
-    const data=el.__data__;
-    if(data){
-      minX=Math.min(minX,data.x);maxX=Math.max(maxX,data.x);
-      minY=Math.min(minY,data.y);maxY=Math.max(maxY,data.y);
-    }
-  });
-  
-  if(minX===Infinity){resetView();return;}
-  
-  const pad=80,dx=maxX-minX+pad*2,dy=maxY-minY+pad*2;
-  const scale=Math.min(container.clientWidth/dx,container.clientHeight/dy,1.5);
-  const tx=container.clientWidth/2-(minX+maxX)/2*scale;
-  const ty=container.clientHeight/2-(minY+maxY)/2*scale;
-  
-  svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(tx,ty).scale(scale));
 }
 
 // =============================================
@@ -1055,7 +959,7 @@ function initColorPalette() {
     
     if (i === 0) btn.classList.add('selected');
     
-    palette.appendChild(btn);
+    palette.appendChild(btn  );
   });
 }
 
@@ -1097,81 +1001,38 @@ function hexToRgba(hex,a){
 }
 
 // =============================================
-// TOOLTIP
+// NOTIFICATIONS
 // =============================================
-function showTooltip(event, member) {
-  const tooltip = document.getElementById('tooltip');
-  const rect = event.currentTarget.getBoundingClientRect();
-  const canvasRect = document.getElementById('canvasArea').getBoundingClientRect();
-  
-  tooltip.innerHTML = `
-    <div style="font-weight:600;margin-bottom:4px;color:#f1f5f9">${member.name}</div>
-    <div style="font-size:11px;color:#94a3b8;line-height:1.4">${formatYears(member.dob,member.deathDate)} \u00B7 ${calculateAge(member.dob,member.deathDate)}</div>
-    ${member.location?`<div style="margin-top:4px">\uD83D\uDCCD ${member.location}</div>`:''}
-    ${member.spouse?`<div style="margin-top:4px">\u2615 ${truncate(member.spouse,10)}</div>`:''}
-  `;
-  
-  tooltip.style.left = Math.min(rect.right - canvasRect.left + 10, window.innerWidth - 240) + 'px';
-  tooltip.style.top = rect.top - canvasRect.top + 40 + 'px';
-  tooltip.classList.add('visible');
-}
-
-function hideTooltip(){
-  document.getElementById('tooltip').classList.remove('visible');
-}
-
-// =============================================
-// MODALS
-// =============================================
-function closeAllModals() {
-  document.querySelectorAll('.modal-overlay').forEach(modal => {
-    modal.classList.remove('show');
-  });
-  document.body.style.overflow = '';
-}
-
-function confirmAction(title, msg, onConfirm) {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent = msg;
-  const okBtn = document.getElementById('confirmOk');
-  
-  // Remove old listener
-  const newOk = okBtn.cloneNode(true);
-  okBtn.parentNode.replaceChild(newOk, okBtn);
-  
-  newOk.addEventListener('click', () => {
-    closeConfirm();
-    onConfirm();
-  });
-  
-  document.getElementById('confirmModal').classList.add('show');
-}
-
-function closeConfirm() {
-  document.getElementById('confirmModal').classList.remove('show');
+function showNotification(message, type) {
+  const toast = document.createElement('div');
+  toast.className = `fixed top-4 right-4 z-[9999] px-5 py-3 rounded-xl shadow-lg animate-fade-in max-w-[320px] ${
+    type === 'success' ? 'bg-emerald-500/95 backdrop-blur-sm text-white' :
+    type === 'error' ? 'bg-red-500/95 backdrop-blur-sm text-white' :
+    'bg-slate-700/95 backdrop-blur-sm text-white'
+  }`;
+  toast.innerHTML = `<span style="font-size:13px;font-weight:500;">${message}</span>`;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    toast.style.transition = 'all .3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
 }
 
 // =============================================
 // UNDO/REDO
 // =============================================
-function pushHistory() {
-  const snapshot = JSON.stringify(state.members);
-  
-  if (state.historyIdx < state.history.length - 1) {
-    state.history = state.history.slice(0, state.historyIdx + 1);
-  }
-  
-  state.history.push(snapshot);
+function pushHistory(){
+  const snap = JSON.stringify(state.members);
+  if(state.historyIdx < state.history.length - 1) state.history = state.history.slice(0, state.historyIdx);
+  state.history.push(snap);
   state.historyIdx = state.history.length - 1;
-  
-  if (state.history.length > 30) {
-    state.history.shift();
-    state.historyIdx--;
-  }
+  if(state.history.length > 30){state.history.shift();state.historyIdx--;}
 }
 
-function undoAction() {
-  if (state.historyIdx > 0) {
+function undoAction(){
+  if(state.historyIdx > 0){
     state.historyIdx--;
     state.members = JSON.parse(state.history[state.historyIdx]);
     updateUI();
@@ -1180,8 +1041,8 @@ function undoAction() {
   }
 }
 
-function redoAction() {
-  if (state.historyIdx < state.history.length - 1) {
+function redoAction(){
+  if(state.historyIdx < state.history.length - 1){
     state.historyIdx++;
     state.members = JSON.parse(state.history[state.historyIdx]);
     updateUI();
@@ -1191,39 +1052,44 @@ function redoAction() {
 }
 
 // =============================================
-// NOTIFICATIONS
+// CLOSE ALL
 // =============================================
-function showNotification(message, type = 'info') {
-  const toast = document.createElement('div');
-  toast.className = `fixed top-4 right-4 z-[9999] px-5 py-3 rounded-xl shadow-lg animate-fade-in flex items-center gap-2 ${
-    type === 'success' ? 'bg-emerald-500/95 backdrop-blur-sm text-white' :
-    type === 'error' ? 'bg-red-500/95 backdrop-blur-sm text-white' :
-    'bg-slate-700/95 backdrop-blur-sm text-white'
-  } max-w-[320px]`;
-  
-  toast.innerHTML = `<span style="font-size:13px;font-weight:500;">${message}</span>`;
-  document.body.appendChild(toast);
-  
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(100%)';
-    toast.style.transition = 'all 0.3s ease';
-    setTimeout(() => toast.remove(), 300);
-  }, 2500);
+function closeAllModals(){
+  document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('show'));
+  document.body.style.overflow = '';
 }
 
-// Animation keyframes
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes fade-in-up{
-    from{opacity:0;transform:translateY(10px)}
-    to{opacity:1;transform:translateY(0)}
-  }
-  .animate-fade-in-up{animation:fade-in-up .3s ease forwards}
-`;
-document.head.appendChild(styleSheet);
+function closeConfirm(){
+  document.getElementById('confirmModal').classList.remove('show');
+}
 
-console.log('✅ All event listeners bound!');
+// =============================================
+// TOGGLE SIDEBAR
+// =============================================
+function toggleSidebar(){
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('closed');
+  const btn = document.getElementById('menuBtn');
+  if(sidebar.classList.contains('closed')){
+    btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12v-2a2 2 0 012-2h12a2 2 0 012 2v6"/>
+  `;
+  } else {
+    btn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6l9 7 9 7v11a2 2 0 012-2H4a2 2 0 01-2 2v6"/>
+  ';
+  }
+}
+
+// =============================================
+// CONFIRM DIALOG
+// =============================================
+document.addEventListener('DOMContentLoaded', function() {
+  const okBtn = document.getElementById('confirmOkBtn');
+  
+  okBtn.addEventListener('click', function() {
+    closeConfirm();
+    // This will be set by confirmAction()
+  });
+});
 </script>
 </body>
 </html>
