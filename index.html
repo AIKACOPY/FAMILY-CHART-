@@ -43,7 +43,6 @@
             overflow: hidden;
         }
 
-        /* Glassmorphism Utilities */
         .glass {
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
@@ -58,7 +57,6 @@
             border-radius: 20px;
         }
 
-        /* Layout */
         .app-container {
             display: grid;
             grid-template-columns: 320px 1fr 380px;
@@ -124,7 +122,6 @@
             border-radius: 2px;
         }
 
-        /* Family Selector */
         .family-selector {
             display: flex;
             flex-direction: column;
@@ -200,7 +197,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* Search Box */
         .search-box {
             position: relative;
         }
@@ -235,7 +231,6 @@
             pointer-events: none;
         }
 
-        /* Filter Tags */
         .filter-tags {
             display: flex;
             flex-wrap: wrap;
@@ -261,7 +256,6 @@
             color: white;
         }
 
-        /* Member List */
         .member-list {
             flex: 1;
             overflow-y: auto;
@@ -342,7 +336,6 @@
             font-weight: 500;
         }
 
-        /* Main Canvas Area */
         .main-canvas {
             position: relative;
             overflow: hidden;
@@ -362,7 +355,6 @@
             cursor: grabbing;
         }
 
-        /* Tree Controls */
         .tree-controls {
             position: absolute;
             bottom: 24px;
@@ -407,7 +399,6 @@
             margin: 4px 4px;
         }
 
-        /* Breadcrumb */
         .breadcrumb-nav {
             position: absolute;
             top: 24px;
@@ -443,7 +434,6 @@
             font-weight: 500;
         }
 
-        /* Right Panel */
         .right-panel {
             background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
             backdrop-filter: blur(20px);
@@ -493,7 +483,6 @@
             padding: 24px;
         }
 
-        /* Member Detail Card */
         .detail-profile {
             text-align: center;
             margin-bottom: 28px;
@@ -552,7 +541,6 @@
             margin-top: 10px;
         }
 
-        /* Detail Info Grid */
         .info-grid {
             display: grid;
             gap: 16px;
@@ -594,7 +582,6 @@
             color: var(--text-primary);
         }
 
-        /* Action Buttons */
         .action-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -614,6 +601,8 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: var(--bg-glass);
+            color: var(--text-primary);
         }
 
         .action-btn.primary {
@@ -625,11 +614,6 @@
         .action-btn.primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-        }
-
-        .action-btn.secondary {
-            background: var(--bg-glass);
-            color: var(--text-primary);
         }
 
         .action-btn.secondary:hover {
@@ -648,11 +632,6 @@
             color: white;
         }
 
-        .action-btn.full-width {
-            grid-column: span 2;
-        }
-
-        /* Statistics Panel */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -691,7 +670,6 @@
             margin-top: 4px;
         }
 
-        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -775,7 +753,6 @@
             gap: 12px;
         }
 
-        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
         }
@@ -857,7 +834,6 @@
             display: none;
         }
 
-        /* File Upload */
         .file-upload {
             position: relative;
             border: 2px dashed var(--border-color);
@@ -897,7 +873,6 @@
             margin-top: 6px;
         }
 
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -962,7 +937,6 @@
             width: 100%;
         }
 
-        /* Floating Action Button */
         .fab {
             position: fixed;
             bottom: 100px;
@@ -985,7 +959,6 @@
             box-shadow: 0 15px 50px rgba(99, 102, 241, 0.5);
         }
 
-        /* Toast Notifications */
         .toast-container {
             position: fixed;
             top: 24px;
@@ -1037,14 +1010,13 @@
             }
         }
 
-        /* Tree Node Styles */
         .node-card {
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .node-card:hover {
-            filter: brightness(1.1);
+            filter: brightness(1.15);
         }
 
         .node-card.selected {
@@ -1052,8 +1024,8 @@
         }
 
         .node-rect {
-            rx: 14;
-            ry: 14;
+            rx: 12;
+            ry: 12;
             stroke-width: 2;
             transition: all 0.3s ease;
         }
@@ -1063,26 +1035,6 @@
             filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.3));
         }
 
-        .node-image-circle {
-            clip-path: circle(50%);
-        }
-
-        .node-name {
-            font-weight: 600;
-            font-size: 13px;
-            fill: white;
-        }
-
-        .node-years {
-            font-size: 10px;
-            fill: rgba(255, 255, 255, 0.7);
-        }
-
-        .node-adoption-badge {
-            font-size: 10px;
-        }
-
-        /* Link Styles */
         .tree-link {
             fill: none;
             stroke-width: 2;
@@ -1090,21 +1042,20 @@
         }
 
         .link-solid {
-            stroke: rgba(148, 163, 184, 0.4);
+            stroke: rgba(148, 163, 184, 0.5);
         }
 
         .link-dashed {
-            stroke: rgba(245, 158, 11, 0.6);
-            stroke-dasharray: 5, 5;
+            stroke: rgba(245, 158, 11, 0.7);
+            stroke-dasharray: 6, 4;
         }
 
         .link-marriage {
-            stroke: rgba(236, 72, 153, 0.5);
+            stroke: rgba(236, 72, 153, 0.6);
             stroke-width: 2;
             stroke-dasharray: 4, 4;
         }
 
-        /* Relationship Panel */
         .relationship-checker {
             padding: 20px;
         }
@@ -1151,7 +1102,6 @@
             color: var(--text-secondary);
         }
 
-        /* Export Options */
         .export-options {
             display: grid;
             gap: 12px;
@@ -1195,7 +1145,6 @@
             color: var(--text-muted);
         }
 
-        /* Toolbar */
         .toolbar {
             position: absolute;
             top: 24px;
@@ -1231,7 +1180,6 @@
             color: var(--text-primary);
         }
 
-        /* Empty State */
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -1261,7 +1209,6 @@
             margin-bottom: 28px;
         }
 
-        /* Confirm Dialog */
         .confirm-dialog {
             text-align: center;
         }
@@ -1299,7 +1246,6 @@
             line-height: 1.6;
         }
 
-        /* Children List in Detail */
         .children-list {
             margin-top: 16px;
         }
@@ -1343,7 +1289,6 @@
             color: var(--text-muted);
         }
 
-        /* Responsive Design */
         @media (max-width: 1400px) {
             .app-container {
                 grid-template-columns: 280px 1fr 340px;
@@ -1446,7 +1391,6 @@
             font-size: 20px;
         }
 
-        /* Scrollbar Styling */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -1465,7 +1409,6 @@
             background: rgba(148, 163, 184, 0.3);
         }
 
-        /* Animation Classes */
         .fade-in {
             animation: fadeIn 0.3s ease;
         }
@@ -1490,7 +1433,6 @@
             }
         }
 
-        /* Tooltip */
         .tooltip {
             position: absolute;
             padding: 10px 14px;
@@ -1505,7 +1447,6 @@
             max-width: 250px;
         }
 
-        /* Loading Spinner */
         .spinner {
             width: 40px;
             height: 40px;
@@ -1519,7 +1460,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Quick Actions Bar */
         .quick-actions {
             padding: 16px 20px;
             border-top: 1px solid var(--border-color);
@@ -1552,11 +1492,34 @@
         .quick-action-btn span:first-child {
             font-size: 20px;
         }
+
+        .save-indicator {
+            position: fixed;
+            bottom: 24px;
+            left: 340px;
+            padding: 10px 18px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 90;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Save Indicator -->
+    <div class="save-indicator" id="saveIndicator">✓ Saved Successfully!</div>
 
     <!-- Mobile Menu Toggle -->
     <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
@@ -1615,6 +1578,9 @@
                 <button class="quick-action-btn" onclick="showImportModal()">
                     <span>📥</span>Import
                 </button>
+                <button class="quick-action-btn" onclick="manualSave()" style="background: rgba(16, 185, 129, 0.1);">
+                    <span>💾</span>Save
+                </button>
             </div>
         </aside>
 
@@ -1636,6 +1602,7 @@
                 <button class="toolbar-btn" onclick="expandAll()" title="Expand All">⊞</button>
                 <button class="toolbar-btn" onclick="collapseAll()" title="Collapse All">⊟</button>
                 <div class="control-divider"></div>
+                <button class="toolbar-btn" onclick="manualSave()" title="Save Data" style="color: var(--success);">💾</button>
                 <button class="toolbar-btn" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
             </div>
 
@@ -1776,8 +1743,8 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('memberModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="document.getElementById('memberForm').dispatchEvent(new Event('submit'))">
-                    Save Member
+                <button class="btn btn-primary" onclick="submitMemberForm()">
+                    💾 Save Member
                 </button>
             </div>
         </div>
@@ -1949,7 +1916,7 @@
             families: {},
             currentFamilyId: null,
             selectedMemberId: null,
-            viewMode: 'main', // 'main' or 'subtree'
+            viewMode: 'main',
             subtreeRootId: null,
             breadcrumb: [],
             zoom: 1,
@@ -1979,7 +1946,6 @@
 
         function initializeApp() {
             if (Object.keys(AppState.families).length === 0) {
-                // Create default family
                 const defaultFamilyId = generateId();
                 AppState.families[defaultFamilyId] = {
                     id: defaultFamilyId,
@@ -1998,6 +1964,9 @@
             renderMemberList();
             renderTree();
             updateUIState();
+
+            // Setup adoption toggle listener
+            document.getElementById('isAdopted').addEventListener('change', handleAdoptionToggle);
         }
 
         // ============================================
@@ -2043,6 +2012,20 @@
         function getCurrentMembers() {
             const family = getCurrentFamily();
             return family ? family.members : {};
+        }
+
+        function manualSave() {
+            saveToStorage();
+            showSaveIndicator();
+            showToast('Data saved successfully!', 'success');
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
         }
 
         // ============================================
@@ -2162,8 +2145,13 @@
         }
 
         function showEditMemberModal(memberId) {
+            console.log('Opening edit modal for:', memberId);
             const member = getCurrentMembers()[memberId];
-            if (!member) return;
+            if (!member) {
+                console.error('Member not found:', memberId);
+                showToast('Member not found!', 'error');
+                return;
+            }
 
             resetMemberForm();
             document.getElementById('memberModalTitle').textContent = 'Edit Family Member';
@@ -2193,6 +2181,7 @@
             populateParentDropdown(memberId);
             handleAdoptionToggle();
             openModal('memberModal');
+            console.log('Edit modal opened successfully');
         }
 
         function resetMemberForm() {
@@ -2201,6 +2190,15 @@
             document.getElementById('previewImage').src = '';
             document.getElementById('originalParentGroup').style.display = 'none';
             AppState.uploadedImage = null;
+        }
+
+        function submitMemberForm() {
+            const form = document.getElementById('memberForm');
+            if (form.checkValidity()) {
+                saveMember(new Event('submit'));
+            } else {
+                form.reportValidity();
+            }
         }
 
         function populateParentDropdown(excludeId = null) {
@@ -2222,6 +2220,7 @@
 
         function saveMember(event) {
             event.preventDefault();
+            event.stopPropagation();
 
             const memberId = document.getElementById('memberId').value || generateId();
             const isEditing = !!document.getElementById('memberId').value;
@@ -2245,7 +2244,7 @@
                     city: document.getElementById('memberCity').value.trim() || null
                 },
                 color: ColorPalette[Math.floor(Math.random() * ColorPalette.length)],
-                createdAt: isEditing ? getCurrentMembers()[memberId]?.createdAt : new Date().toISOString(),
+                createdAt: isEditing ? (getCurrentMembers()[memberId]?.createdAt || new Date().toISOString()) : new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
 
@@ -2267,13 +2266,14 @@
             saveToUndoStack();
             getCurrentFamily().members[memberId] = memberData;
             saveToStorage();
+            showSaveIndicator();
 
             closeModal('memberModal');
             renderMemberList();
             renderTree();
             updateUIState();
 
-            showToast(isEditing ? 'Member updated successfully!' : 'Member added successfully!', 'success');
+            showToast(isEditing ? '✅ Member updated successfully!' : '✅ Member added successfully!', 'success');
 
             // Select the new/edited member
             selectMember(memberId);
@@ -2289,7 +2289,6 @@
             document.getElementById('confirmDeleteBtn').onclick = () => {
                 saveToUndoStack();
                 
-                // Move children to root or reassign
                 Object.values(getCurrentMembers()).forEach(m => {
                     if (m.parentId === memberId) {
                         m.parentId = null;
@@ -2304,6 +2303,7 @@
                 }
 
                 saveToStorage();
+                showSaveIndicator();
                 closeModal('deleteModal');
                 renderMemberList();
                 renderTree();
@@ -2338,7 +2338,7 @@
         }
 
         // ============================================
-        // TREE RENDERING WITH D3.JS
+        // TREE RENDERING WITH D3.JS - FIXED VERSION
         // ============================================
 
         let svg, g, zoomBehavior;
@@ -2367,7 +2367,6 @@
             }
 
             if (rootMembers.length === 0 && memberArray.length > 0) {
-                // If no root members but have members, use first member as root
                 rootMembers = [memberArray[0]];
             }
 
@@ -2399,22 +2398,22 @@
 
             // Create tree layout
             const treeLayout = d3.tree()
-                .size([height - 100, width - 400])
-                .separation((a, b) => (a.parent === b.parent ? 1.2 : 1.5));
+                .size([height - 120, width - 450])
+                .separation((a, b) => (a.parent === b.parent ? 1.3 : 1.8));
 
             const root = d3.hierarchy(hierarchyData);
             treeLayout(root);
 
-            // Draw links
+            // Draw links FIRST (so they're behind nodes)
             drawLinks(root, g);
 
-            // Draw nodes
+            // Draw nodes SECOND (so they're on top)
             drawNodes(root.descendants(), g, members);
 
-            // Center tree
+            // Center tree after a short delay
             setTimeout(() => {
                 fitToScreen();
-            }, 100);
+            }, 150);
         }
 
         function buildTreeNode(member, allMembers) {
@@ -2423,14 +2422,12 @@
                 children: []
             };
 
-            // Find children (both biological and adopted)
             Object.values(allMembers).forEach(child => {
                 if (child.parentId === member.id) {
                     node.children.push(buildTreeNode(child, allMembers));
                 }
             });
 
-            // If no children, remove empty array
             if (node.children.length === 0) {
                 delete node.children;
             }
@@ -2439,52 +2436,55 @@
         }
 
         function drawLinks(root, g) {
-            const links = g.selectAll('.tree-link')
-                .data(root.links())
-                .enter();
+            const links = root.links();
 
             // Regular parent-child links
             links.filter(d => !d.target.data.isAdopted)
-                .append('path')
-                .attr('class', 'tree-link link-solid')
-                .attr('d', d3.linkHorizontal()
-                    .x(d => d.y)
-                    .y(d => d.x));
+                .forEach(d => {
+                    g.append('path')
+                        .attr('class', 'tree-link link-solid')
+                        .attr('d', d3.linkHorizontal()
+                            .x(dd => dd.y)
+                            .y(dd => dd.x));
+                });
 
             // Adoption links (dashed)
             links.filter(d => d.target.data.isAdopted)
-                .append('path')
-                .attr('class', 'tree-link link-dashed')
-                .attr('d', d3.linkHorizontal()
-                    .x(d => d.y)
-                    .y(d => d.x));
+                .forEach(d => {
+                    g.append('path')
+                        .attr('class', 'tree-link link-dashed')
+                        .attr('d', d3.linkHorizontal()
+                            .x(dd => dd.y)
+                            .y(dd => dd.x));
+                });
 
-            // Marriage links (spouse connections)
+            // Marriage links
             root.each(d => {
-                if (d.data.spouseName) {
-                    // Draw marriage indicator
+                if (d.data.spouseName && d.depth > 0) {
                     g.append('line')
                         .attr('class', 'link-marriage')
-                        .attr('x1', d.y + 80)
+                        .attr('x1', d.y + 90)
                         .attr('y1', d.x)
-                        .attr('x2', d.y + 130)
-                        .attr('y2', d.x)
-                        .style('opacity', 0.6);
+                        .attr('x2', d.y + 160)
+                        .attr('y2', d.x);
                     
-                    // Spouse label
                     g.append('text')
-                        .attr('x', d.y + 145)
+                        .attr('x', d.y + 170)
                         .attr('y', d.x + 4)
                         .attr('font-size', '11px')
                         .attr('fill', '#ec4899')
-                        .text('💑 ' + d.data.spouseName);
+                        .text('💑 ' + truncateText(d.data.spouseName, 15));
                 }
             });
         }
 
         function drawNodes(descendants, g, allMembers) {
-            const nodes = g.selectAll('.node-card')
-                .data(d => descendants.filter(node => node.data.name !== 'root'))
+            // Filter out root node
+            const validNodes = descendants.filter(node => node.data.name !== 'root');
+
+            // Create node groups
+            const nodeGroups = g.selectAll('.node-card')
+                .data(validNodes)
                 .enter()
                 .append('g')
                 .attr('class', 'node-card')
@@ -2498,92 +2498,106 @@
                     showSubtreeView(d.data.id);
                 });
 
-            // Card background
-            nodes.append('rect')
+            // Card background rectangle - LARGER SIZE FOR BETTER VISIBILITY
+            nodeGroups.append('rect')
                 .attr('class', 'node-rect')
-                .attr('width', 150)
-                .attr('height', 70)
-                .attr('x', -75)
-                .attr('y', -35)
+                .attr('width', 170)
+                .attr('height', 80)
+                .attr('x', -85)
+                .attr('y', -40)
                 .attr('fill', d => d.data.color || '#6366f1')
-                .attr('stroke', d => AppState.selectedMemberId === d.data.id ? '#fff' : 'rgba(255,255,255,0.2)')
+                .attr('stroke', d => AppState.selectedMemberId === d.data.id ? '#ffffff' : 'rgba(255,255,255,0.3)')
                 .attr('stroke-width', d => AppState.selectedMemberId === d.data.id ? 3 : 2);
 
             // Profile image circle
-            nodes.append('clipPath')
+            nodeGroups.append('defs').append('clipPath')
                 .attr('id', d => `clip-${d.data.id}`)
                 .append('circle')
-                .attr('r', 18)
-                .attr('cx', -48)
-                .attr('cy', -8);
+                .attr('r', 22)
+                .attr('cx', -58)
+                .attr('cy', -12);
 
-            nodes.append('image')
-                .attr('class', 'node-image-circle')
-                .attr('x', -66)
-                .attr('y', -26)
-                .attr('width', 36)
-                .attr('height', 36)
+            nodeGroups.append('image')
+                .attr('x', -80)
+                .attr('y', -34)
+                .attr('width', 44)
+                .attr('height', 44)
                 .attr('href', d => d.data.image || getDefaultAvatar(d.data.gender))
                 .attr('clip-path', d => `url(#clip-${d.data.id})`)
-                .preserveAspectRatio('xMidYMid slice');
+                .attr('preserveAspectRatio', 'xMidYMid slice');
 
-            // Name
-            nodes.append('text')
-                .attr('class', 'node-name')
-                .attr('x', -22)
-                .attr('y', -8)
-                .text(d => truncateText(d.data.name, 14));
+            // NAME TEXT - VISIBLE AND CLEAR
+            nodeGroups.append('text')
+                .attr('font-size', '14px')
+                .attr('font-weight', '600')
+                .attr('fill', '#ffffff')
+                .attr('x', -26)
+                .attr('y', -14)
+                .text(d => truncateText(d.data.name, 16));
 
-            // Years
-            nodes.append('text')
-                .attr('class', 'node-years')
-                .attr('x', -22)
-                .attr('y', 8)
+            // YEARS TEXT
+            nodeGroups.append('text')
+                .attr('font-size', '11px')
+                .attr('fill', 'rgba(255,255,255,0.8)')
+                .attr('x', -26)
+                .attr('y', 4)
                 .text(d => formatYears(d.data.dob, d.data.deathDate));
 
-            // Location indicator
-            nodes.filter(d => d.data.location?.city)
-                .append('text')
-                .attr('font-size', '9px')
-                .attr('fill', 'rgba(255,255,255,0.5)')
-                .attr('x', -22)
-                .attr('y', 20)
-                .text(d => '📍 ' + truncateText(d.data.location.city, 12));
-
-            // Adoption badge
-            nodes.filter(d => d.data.isAdopted)
-                .append('circle')
-                .attr('r', 10)
-                .attr('cx', 58)
-                .attr('cy', -22)
-                .attr('fill', '#f59e0b');
-
-            nodes.filter(d => d.data.isAdopted)
+            // LOCATION TEXT (if exists)
+            nodeGroups.filter(d => d.data.location && d.data.location.city)
                 .append('text')
                 .attr('font-size', '10px')
-                .attr('text-anchor', 'middle')
-                .attr('fill', '#fff')
-                .attr('x', 58)
-                .attr('y', -19)
-                .text('👶');
-
-            // Generation number
-            nodes.append('text')
-                .attr('font-size', '9px')
                 .attr('fill', 'rgba(255,255,255,0.6)')
+                .attr('x', -26)
+                .attr('y', 20)
+                .text(d => '📍 ' + truncateText(d.data.location.city, 14));
+
+            // GENDER ICON
+            nodeGroups.append('text')
+                .attr('font-size', '16px')
+                .attr('text-anchor', 'middle')
+                .attr('x', 65)
+                .attr('y', -18)
+                .text(d => d.data.gender === 'female' ? '♀' : '♂');
+
+            // GENERATION NUMBER
+            nodeGroups.append('text')
+                .attr('font-size', '9px')
+                .attr('fill', 'rgba(255,255,255,0.7)')
                 .attr('text-anchor', 'middle')
                 .attr('x', 0)
-                .attr('y', 45)
+                .attr('y', 52)
                 .text(d => `Gen ${getGeneration(d.data.id)}`);
+
+            // ADOPTION BADGE
+            nodeGroups.filter(d => d.data.isAdopted)
+                .append('circle')
+                .attr('r', 12)
+                .attr('cx', 65)
+                .attr('cy', 5)
+                .attr('fill', '#f59e0b');
+
+            nodeGroups.filter(d => d.data.isAdopted)
+                .append('text')
+                .attr('font-size', '12px')
+                .attr('text-anchor', 'middle')
+                .attr('fill', '#ffffff')
+                .attr('x', 65)
+                .attr('y', 9)
+                .text('👶');
         }
 
         function getDefaultAvatar(gender) {
-            return gender === 'female' ? 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23ec4899" width="100" height="100"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="white">♀</text></svg>' 
-            : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%236366f1" width="100" height="100"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="white">♂</text></svg>';
+            if (gender === 'female') {
+                return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="#ec4899" width="100" height="100"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="white">♀</text></svg>');
+            } else {
+                return 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="#6366f1" width="100" height="100"/><text x="50" y="65" font-size="50" text-anchor="middle" fill="white">♂</text></svg>');
+            }
         }
 
         function truncateText(text, maxLength) {
-            return text && text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+            if (!text) return '';
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
         }
 
         function formatYears(dob, deathDate) {
@@ -2682,9 +2696,9 @@
 
         function selectMember(memberId) {
             AppState.selectedMemberId = memberId;
-            renderTree(); // Re-render to show selection
+            renderTree();
             showMemberDetail(memberId);
-            renderMemberList(); // Update list selection state
+            renderMemberList();
         }
 
         function showMemberDetail(memberId) {
@@ -2779,7 +2793,7 @@
 
                 <div class="action-buttons">
                     <button class="action-btn primary" onclick="showEditMemberModal('${memberId}')">
-                        ✏️ Edit
+                        ✏️ Edit Member
                     </button>
                     <button class="action-btn secondary" onclick="showSubtreeView('${memberId}')">
                         🌳 Family Chart
@@ -2840,10 +2854,7 @@
 
             AppState.viewMode = 'subtree';
             AppState.subtreeRootId = memberId;
-            
-            // Update breadcrumb
             updateBreadcrumb(member);
-            
             renderTree();
             updateUIState();
         }
@@ -2852,7 +2863,6 @@
             AppState.viewMode = 'main';
             AppState.subtreeRootId = null;
             AppState.breadcrumb = [];
-            
             document.getElementById('breadcrumbNav').style.display = 'none';
             renderTree();
             updateUIState();
@@ -2861,11 +2871,8 @@
         function updateBreadcrumb(member) {
             const nav = document.getElementById('breadcrumbNav');
             const path = document.getElementById('breadcrumbPath');
-            
             nav.style.display = 'flex';
-            
-            let pathHtml = `<span class="breadcrumb-current">${escapeHtml(member.name)}</span>`;
-            path.innerHTML = pathHtml;
+            path.innerHTML = `<span class="breadcrumb-current">${escapeHtml(member.name)}</span>`;
         }
 
         // ============================================
@@ -2879,12 +2886,8 @@
 
         function setFilter(filter, element) {
             AppState.filter = filter;
-            
-            document.querySelectorAll('.filter-tag').forEach(tag => {
-                tag.classList.remove('active');
-            });
+            document.querySelectorAll('.filter-tag').forEach(tag => tag.classList.remove('active'));
             element.classList.add('active');
-            
             renderMemberList();
         }
 
@@ -2893,11 +2896,9 @@
         // ============================================
 
         function showRelationshipChecker() {
-            const modal = document.getElementById('relationshipModal');
             const select1 = document.getElementById('relPerson1');
             const select2 = document.getElementById('relPerson2');
             
-            // Populate dropdowns
             const options = '<option value="">Select member...</option>' + 
                 Object.values(getCurrentMembers()).map(m => 
                     `<option value="${m.id}">${escapeHtml(m.name)}</option>`
@@ -2906,7 +2907,6 @@
             select1.innerHTML = options;
             select2.innerHTML = options;
             document.getElementById('relationshipResult').innerHTML = '';
-            
             openModal('relationshipModal');
         }
 
@@ -2926,7 +2926,6 @@
             }
             
             const relation = findRelationship(id1, id2);
-            
             resultDiv.innerHTML = `
                 <div class="result-display fade-in">
                     <div class="result-relation">${relation.relationship}</div>
@@ -2940,13 +2939,9 @@
             const m1 = members[id1];
             const m2 = members[id2];
             
-            // Same person check handled above
-            
-            // Direct relationships
             if (m1.parentId === id2) return { relationship: 'Child', detail: `${m1.name} is the child of ${m2.name}` };
             if (m2.parentId === id1) return { relationship: 'Parent', detail: `${m1.name} is the parent of ${m2.name}` };
             
-            // Siblings
             if (m1.parentId && m1.parentId === m2.parentId) {
                 return { 
                     relationship: m1.gender === m2.gender ? (m1.gender === 'male' ? 'Brother' : 'Sister') : 'Sibling',
@@ -2954,25 +2949,20 @@
                 };
             }
             
-            // Grandparent/Grandchild
             if (isGrandparentOf(id1, id2, members)) return { relationship: 'Grandparent', detail: `${m1.name} is the grandparent of ${m2.name}` };
             if (isGrandparentOf(id2, id1, members)) return { relationship: 'Grandchild', detail: `${m1.name} is the grandchild of ${m2.name}` };
             
-            // Uncle/Aunt/Nephew/Niece
             const uncleRelation = findUncleAuntRelation(id1, id2, members);
             if (uncleRelation) return uncleRelation;
             
-            // Cousins
             if (areCousins(id1, id2, members)) {
                 return { relationship: 'Cousin', detail: `${m1.name} and ${m2.name} are cousins` };
             }
             
-            // Spouse (if same parentId for their children)
             if (areSpouses(id1, id2, members)) {
                 return { relationship: 'Spouse (in-law)', detail: `${m1.name} and ${m2.name} appear to be married/in a relationship` };
             }
             
-            // Generic relation based on common ancestor
             const ancestor = findCommonAncestor(id1, id2, members);
             if (ancestor) {
                 return { relationship: 'Related', detail: `${m1.name} and ${m2.name} are related through ${ancestor.name}` };
@@ -2989,25 +2979,15 @@
         function findUncleAuntRelation(id1, id2, members) {
             const m1 = members[id1];
             const m2 = members[id2];
-            
-            // Check if id1's parent has siblings who are parents of id2
             const parent1 = members[m1.parentId];
             if (parent1) {
-                const siblings = Object.values(members).filter(m => 
-                    m.parentId === parent1.parentId && m.id !== parent1.id
-                );
+                const siblings = Object.values(members).filter(m => m.parentId === parent1.parentId && m.id !== parent1.id);
                 for (const sibling of siblings) {
                     if (sibling.id === m2.parentId) {
-                        return {
-                            relationship: m2.gender === 'male' ? 'Nephew' : 'Niece',
-                            detail: `${m1.name} is the ${m1.gender === 'male' ? 'uncle' : 'aunt'} of ${m2.name}`
-                        };
+                        return { relationship: m2.gender === 'male' ? 'Nephew' : 'Niece', detail: `${m1.name} is the ${m1.gender === 'male' ? 'uncle' : 'aunt'} of ${m2.name}` };
                     }
                     if (sibling.id === m2.id) {
-                        return {
-                            relationship: m2.gender === 'male' ? 'Uncle' : 'Aunt',
-                            detail: `${m2.name} is the ${m2.gender === 'male' ? 'uncle' : 'aunt'} of ${m1.name}`
-                        };
+                        return { relationship: m2.gender === 'male' ? 'Uncle' : 'Aunt', detail: `${m2.name} is the ${m2.gender === 'male' ? 'uncle' : 'aunt'} of ${m1.name}` };
                     }
                 }
             }
@@ -3031,23 +3011,16 @@
         function areSpouses(id1, id2, members) {
             const m1 = members[id1];
             const m2 = members[id2];
-            
-            // Check explicit spouse names
             if (m1.spouseName && m2.name === m1.spouseName) return true;
             if (m2.spouseName && m1.name === m2.spouseName) return true;
-            
-            // Check if they share children
             const children1 = Object.values(members).filter(m => m.parentId === id1);
             const children2 = Object.values(members).filter(m => m.parentId === id2);
-            const sharedChildren = children1.filter(c1 => children2.some(c2 => c1.id === c2.id));
-            
-            return sharedChildren.length > 0;
+            return children1.some(c1 => children2.some(c2 => c1.id === c2.id));
         }
 
         function findCommonAncestor(id1, id2, members) {
             const ancestors1 = getAllAncestors(id1, members);
             const ancestors2 = getAllAncestors(id2, members);
-            
             for (const anc of ancestors1) {
                 if (ancestors2.includes(anc)) return members[anc];
             }
@@ -3057,12 +3030,10 @@
         function getAllAncestors(memberId, members) {
             const ancestors = [];
             let currentId = memberId;
-            
             while (currentId && members[currentId]?.parentId) {
                 currentId = members[currentId].parentId;
                 ancestors.push(currentId);
             }
-            
             return ancestors;
         }
 
@@ -3082,7 +3053,6 @@
             const femaleCount = memberArray.filter(m => m.gender === 'female').length;
             const adoptedCount = memberArray.filter(m => m.isAdopted).length;
             
-            // Upcoming birthdays (next 30 days)
             const today = new Date();
             const upcomingBirthdays = memberArray.filter(m => {
                 if (!m.dob || m.deathDate) return false;
@@ -3180,7 +3150,6 @@
 
         async function exportAsPDF() {
             showToast('Generating PDF...', 'info');
-            
             try {
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('l', 'mm', 'a4');
@@ -3192,7 +3161,6 @@
                 pdf.text(`Generated on ${new Date().toLocaleDateString()}`, 20, 30);
                 pdf.text(`Total Members: ${Object.keys(family.members).length}`, 20, 37);
                 
-                // Add member list
                 let y = 50;
                 pdf.setFontSize(14);
                 pdf.text('Family Members:', 20, y);
@@ -3219,7 +3187,6 @@
 
         async function exportAsPNG() {
             showToast('Capturing image...', 'info');
-            
             try {
                 const canvas = await html2canvas(document.getElementById('tree-container'), {
                     backgroundColor: '#0f172a',
@@ -3243,7 +3210,6 @@
             const family = getCurrentFamily();
             const embeddedData = JSON.stringify(family);
             
-            // Get current page HTML as template
             const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3265,7 +3231,6 @@
     <div id="tree"></div>
     <script>
         const familyData = ${embeddedData};
-        // Render tree from embedded data...
         console.log('Family data loaded:', familyData.name, Object.keys(familyData.members).length, 'members');
     <\/script>
 </body>
@@ -3288,7 +3253,6 @@
         function handleJSONImport(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = (e) => {
                 document.getElementById('importTextarea').value = e.target.result;
@@ -3298,7 +3262,6 @@
 
         function importFromText() {
             const jsonText = document.getElementById('importTextarea').value.trim();
-            
             if (!jsonText) {
                 showToast('Please paste JSON data or upload a file.', 'warning');
                 return;
@@ -3306,18 +3269,14 @@
 
             try {
                 let importedData;
-                
-                // Try parsing as single family or full app data
                 const parsed = JSON.parse(jsonText);
                 
                 if (parsed.families) {
-                    // Full app data
                     Object.assign(AppState.families, parsed.families);
                     if (parsed.currentFamilyId && !AppState.families[parsed.currentFamilyId]) {
                         AppState.currentFamilyId = parsed.currentFamilyId;
                     }
                 } else if (parsed.members) {
-                    // Single family data
                     const newId = generateId();
                     AppState.families[newId] = {
                         id: newId,
@@ -3331,6 +3290,7 @@
                 }
 
                 saveToStorage();
+                showSaveIndicator();
                 closeModal('importModal');
                 renderFamilySelector();
                 renderMemberList();
@@ -3348,49 +3308,38 @@
         // ============================================
 
         function zoomIn() {
-            if (svg) {
-                svg.transition().call(zoomBehavior.scaleBy, 1.3);
-            }
+            if (svg) svg.transition().call(zoomBehavior.scaleBy, 1.3);
         }
 
         function zoomOut() {
-            if (svg) {
-                svg.transition().call(zoomBehavior.scaleBy, 0.7);
-            }
+            if (svg) svg.transition().call(zoomBehavior.scaleBy, 0.7);
         }
 
         function resetZoom() {
-            if (svg) {
-                svg.transition().call(zoomBehavior.transform, d3.zoomIdentity);
-            }
+            if (svg) svg.transition().call(zoomBehavior.transform, d3.zoomIdentity);
         }
 
         function fitToScreen() {
             if (!svg) return;
-            
             const container = document.getElementById('tree-container');
             const width = container.clientWidth;
             const height = container.clientHeight;
-            
-            // Calculate bounds of all nodes
             const nodes = g.selectAll('.node-card');
             if (nodes.empty()) return;
             
             let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-            
             nodes.each(function(d) {
                 const x = d.x || 0;
                 const y = d.y || 0;
-                minX = Math.min(minX, x - 75);
-                maxX = Math.max(maxX, x + 75);
-                minY = Math.min(minY, y - 35);
-                maxY = Math.max(maxY, y + 35);
+                minX = Math.min(minX, x - 85);
+                maxX = Math.max(maxX, x + 85);
+                minY = Math.min(minY, y - 40);
+                maxY = Math.max(maxY, y + 40);
             });
             
-            const padding = 100;
+            const padding = 120;
             const contentWidth = maxX - minX + padding * 2;
             const contentHeight = maxY - minY + padding * 2;
-            
             const scale = Math.min(width / contentWidth, height / contentHeight, 1.5);
             const centerX = (minX + maxX) / 2;
             const centerY = (minY + maxY) / 2;
@@ -3404,25 +3353,18 @@
 
         function centerTree() {
             if (!svg) return;
-            
             const container = document.getElementById('tree-container');
             const width = container.clientWidth;
             const height = container.clientHeight;
-            
-            const transform = d3.zoomIdentity
-                .translate(width / 2, height / 2)
-                .scale(1);
-            
+            const transform = d3.zoomIdentity.translate(width / 2, height / 2).scale(1);
             svg.transition().duration(500).call(zoomBehavior.transform, transform);
         }
 
         function expandAll() {
-            // For future implementation - expand collapsed branches
             showToast('All branches expanded', 'info');
         }
 
         function collapseAll() {
-            // For future implementation - collapse expanded branches
             showToast('All branches collapsed', 'info');
         }
 
@@ -3492,18 +3434,8 @@
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             
-            const icons = {
-                success: '✅',
-                error: '❌',
-                warning: '⚠️',
-                info: 'ℹ️'
-            };
-            
-            toast.innerHTML = `
-                <span>${icons[type] || icons.info}</span>
-                <span>${message}</span>
-            `;
-            
+            const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+            toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${message}</span>`;
             container.appendChild(toast);
             
             setTimeout(() => {
@@ -3523,15 +3455,10 @@
         }
 
         function undo() {
-            if (AppState.undoStack.length === 0) {
-                showToast('Nothing to undo', 'warning');
-                return;
-            }
-            
+            if (AppState.undoStack.length === 0) { showToast('Nothing to undo', 'warning'); return; }
             AppState.redoStack.push(JSON.stringify(getCurrentFamily()));
             const previous = JSON.parse(AppState.undoStack.pop());
             getCurrentFamily().members = previous.members;
-            
             saveToStorage();
             renderMemberList();
             renderTree();
@@ -3539,15 +3466,10 @@
         }
 
         function redo() {
-            if (AppState.redoStack.length === 0) {
-                showToast('Nothing to redo', 'warning');
-                return;
-            }
-            
+            if (AppState.redoStack.length === 0) { showToast('Nothing to redo', 'warning'); return; }
             AppState.undoStack.push(JSON.stringify(getCurrentFamily()));
             const next = JSON.parse(AppState.redoStack.pop());
             getCurrentFamily().members = next.members;
-            
             saveToStorage();
             renderMemberList();
             renderTree();
@@ -3557,8 +3479,6 @@
         // ============================================
         // ADOPTION TOGGLE HANDLER
         // ============================================
-
-        document.getElementById('isAdopted')?.addEventListener('change', handleAdoptionToggle);
 
         function handleAdoptionToggle() {
             const isChecked = document.getElementById('isAdopted').checked;
@@ -3570,40 +3490,24 @@
         // ============================================
 
         document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + Z: Undo
             if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
                 e.preventDefault();
                 undo();
             }
-            
-            // Ctrl/Cmd + Shift + Z or Ctrl/Cmd + Y: Redo
             if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
                 e.preventDefault();
                 redo();
             }
-            
-            // Ctrl/Cmd + S: Save
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                 e.preventDefault();
-                saveToStorage();
-                showToast('Data saved!', 'success');
+                manualSave();
             }
-            
-            // Escape: Close modals/panels
             if (e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
-                    modal.classList.remove('active');
-                });
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => modal.classList.remove('active'));
                 closePanel();
             }
-            
-            // +/-: Zoom
-            if (e.key === '+' || e.key === '=') {
-                zoomIn();
-            }
-            if (e.key === '-') {
-                zoomOut();
-            }
+            if (e.key === '+' || e.key === '=') zoomIn();
+            if (e.key === '-') zoomOut();
         });
 
         // ============================================
@@ -3624,10 +3528,10 @@
             if (Object.keys(AppState.families).length > 0) {
                 saveToStorage();
             }
-        }, 30000); // Auto-save every 30 seconds
+        }, 30000);
 
         // ============================================
-        // SAMPLE DATA FOR DEMO (Optional)
+        // SAMPLE DATA FOR DEMO
         // ============================================
 
         function loadSampleData() {
@@ -3638,127 +3542,19 @@
                 members: {}
             };
 
-            // Root generation
-            const grandpa = {
-                id: 'm1',
-                name: 'Robert Smith',
-                dob: '1940-05-15',
-                deathDate: '2018-03-20',
-                gender: 'male',
-                parentId: null,
-                spouseName: 'Mary Johnson',
-                marriageDate: '1965-06-12',
-                location: { country: 'USA', state: 'Texas', city: 'Austin' },
-                color: '#6366f1',
-                createdAt: new Date().toISOString()
-            };
+            const members = [
+                { id: 'm1', name: 'Robert Smith', dob: '1940-05-15', deathDate: '2018-03-20', gender: 'male', parentId: null, spouseName: 'Mary Johnson', marriageDate: '1965-06-12', location: { country: 'USA', state: 'Texas', city: 'Austin' }, color: '#6366f1', createdAt: new Date().toISOString() },
+                { id: 'm2', name: 'Mary Smith', dob: '1943-08-22', gender: 'female', parentId: null, spouseName: 'Robert Smith', marriageDate: '1965-06-12', location: { country: 'USA', state: 'Texas', city: 'Austin' }, color: '#ec4899', createdAt: new Date().toISOString() },
+                { id: 'm3', name: 'James Smith', dob: '1968-03-10', gender: 'male', parentId: 'm1', spouseName: 'Sarah Williams', marriageDate: '1992-07-18', location: { country: 'USA', state: 'California', city: 'Los Angeles' }, color: '#8b5cf6', createdAt: new Date().toISOString() },
+                { id: 'm4', name: 'Jennifer Brown', dob: '1970-11-25', gender: 'female', parentId: 'm1', spouseName: 'Michael Brown', marriageDate: '1995-09-03', location: { country: 'USA', state: 'New York', city: 'NYC' }, color: '#f43f5e', createdAt: new Date().toISOString() },
+                { id: 'm5', name: 'Michael Smith', dob: '1995-04-18', gender: 'male', parentId: 'm3', location: { country: 'USA', state: 'California', city: 'San Francisco' }, color: '#22c55e', createdAt: new Date().toISOString() },
+                { id: 'm6', name: 'Emily Davis', dob: '1998-09-02', gender: 'female', parentId: 'm3', spouseName: 'David Davis', marriageDate: '2022-06-15', location: { country: 'USA', state: 'Washington', city: 'Seattle' }, color: '#14b8a6', createdAt: new Date().toISOString() },
+                { id: 'm7', name: 'Christopher Brown', dob: '1997-12-08', gender: 'male', parentId: 'm4', location: { country: 'USA', state: 'New York', city: 'Brooklyn' }, color: '#f97316', createdAt: new Date().toISOString() },
+                { id: 'm8', name: 'Olivia Davis', dob: '2023-02-14', gender: 'female', parentId: 'm6', location: { country: 'USA', state: 'Washington', city: 'Seattle' }, color: '#06b6d4', createdAt: new Date().toISOString() },
+                { id: 'm9', name: 'Lucas Smith', dob: '2001-07-30', gender: 'male', parentId: 'm3', isAdopted: true, originalParentId: null, location: { country: 'USA', state: 'California', city: 'Los Angeles' }, color: '#eab308', createdAt: new Date().toISOString() }
+            ];
 
-            const grandma = {
-                id: 'm2',
-                name: 'Mary Smith',
-                dob: '1943-08-22',
-                gender: 'female',
-                parentId: null,
-                spouseName: 'Robert Smith',
-                marriageDate: '1965-06-12',
-                location: { country: 'USA', state: 'Texas', city: 'Austin' },
-                color: '#ec4899',
-                createdAt: new Date().toISOString()
-            };
-
-            // Second generation
-            const father = {
-                id: 'm3',
-                name: 'James Smith',
-                dob: '1968-03-10',
-                gender: 'male',
-                parentId: 'm1',
-                spouseName: 'Sarah Williams',
-                marriageDate: '1992-07-18',
-                location: { country: 'USA', state: 'California', city: 'Los Angeles' },
-                color: '#8b5cf6',
-                createdAt: new Date().toISOString()
-            };
-
-            const aunt = {
-                id: 'm4',
-                name: 'Jennifer Smith-Brown',
-                dob: '1970-11-25',
-                gender: 'female',
-                parentId: 'm1',
-                spouseName: 'Michael Brown',
-                marriageDate: '1995-09-03',
-                location: { country: 'USA', state: 'New York', city: 'NYC' },
-                color: '#f43f5e',
-                createdAt: new Date().toISOString()
-            };
-
-            // Third generation
-            const son = {
-                id: 'm5',
-                name: 'Michael Smith',
-                dob: '1995-04-18',
-                gender: 'male',
-                parentId: 'm3',
-                location: { country: 'USA', state: 'California', city: 'San Francisco' },
-                color: '#22c55e',
-                createdAt: new Date().toISOString()
-            };
-
-            const daughter = {
-                id: 'm6',
-                name: 'Emily Smith-Davis',
-                dob: '1998-09-02',
-                gender: 'female',
-                parentId: 'm3',
-                spouseName: 'David Davis',
-                marriageDate: '2022-06-15',
-                location: { country: 'USA', state: 'Washington', city: 'Seattle' },
-                color: '#14b8a6',
-                createdAt: new Date().toISOString()
-            };
-
-            const cousin = {
-                id: 'm7',
-                name: 'Christopher Brown',
-                dob: '1997-12-08',
-                gender: 'male',
-                parentId: 'm4',
-                location: { country: 'USA', state: 'New York', city: 'Brooklyn' },
-                color: '#f97316',
-                createdAt: new Date().toISOString()
-            };
-
-            // Fourth generation (daughter's child - proving daughter lineage works!)
-            const granddaughter = {
-                id: 'm8',
-                name: 'Olivia Davis',
-                dob: '2023-02-14',
-                gender: 'female',
-                parentId: 'm6',
-                location: { country: 'USA', state: 'Washington', city: 'Seattle' },
-                color: '#06b6d4',
-                createdAt: new Date().toISOString()
-            };
-
-            // Adopted child example
-            const adopted = {
-                id: 'm9',
-                name: 'Lucas Smith',
-                dob: '2001-07-30',
-                gender: 'male',
-                parentId: 'm3',
-                isAdopted: true,
-                originalParentId: null,
-                location: { country: 'USA', state: 'California', city: 'Los Angeles' },
-                color: '#eab308',
-                createdAt: new Date().toISOString()
-            };
-
-            // Add all members
-            [grandpa, grandma, father, aunt, son, daughter, cousin, granddaughter, adopted].forEach(m => {
-                sampleFamily.members[m.id] = m;
-            });
+            members.forEach(m => { sampleFamily.members[m.id] = m; });
 
             AppState.families['sample_family'] = sampleFamily;
             AppState.currentFamilyId = 'sample_family';
@@ -3771,11 +3567,6 @@
             
             showToast('Sample data loaded! Explore the features.', 'success');
         }
-
-        // Uncomment below to load sample data on first visit:
-        // if (Object.keys(AppState.families).length === 0 || Object.keys(getCurrentMembers()).length === 0) {
-        //     loadSampleData();
-        // }
     </script>
 </body>
 </html>
